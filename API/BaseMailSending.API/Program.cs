@@ -1,5 +1,6 @@
 using BaseMailSending.Application;
 using BaseMailSending.Persistence;
+using BaseMailSending.Infrastructure;
 using BaseMailSending.Persistence.Initialization;
 using BaseMailSending.Api.Configurations;
 using BaseMailSending.Api.Extensions;
@@ -24,6 +25,7 @@ builder.Services.AddApiServices();
 builder.Services.AddApplication();
 
 builder.Services.AddInfrastructurePersistence(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -44,7 +46,11 @@ app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
 
+app.UseInfrastructure(builder.Configuration);
+
 app.UseCustomExceptionHandler();
+
+app.Services.AddOutBoxJob(builder.Configuration);
 
 app.Lifetime.ApplicationStarted.Register(() =>
 {

@@ -6,7 +6,7 @@ using BaseMailSending.Domain.AggregatesModels.Products;
 using BaseMailSending.Domain.Common;
 
 
-public sealed class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, int>
+public sealed class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, Guid>
 {
     private readonly IProductRepository _productRepository;
 
@@ -17,11 +17,11 @@ public sealed class UpdateProductCommandHandler : ICommandHandler<UpdateProductC
         _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
     }
 
-    public async Task<Result<int>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         Product? product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
         if (product is null)
-            return Result.Failure<int>(ProductErrors.NotFound);
+            return Result.Failure<Guid>(ProductErrors.NotFound);
 
         // Update price only if it actually changed
         if (request.Price != product.Price)

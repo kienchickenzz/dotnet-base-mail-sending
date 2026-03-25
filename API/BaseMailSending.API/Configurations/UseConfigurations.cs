@@ -12,6 +12,12 @@ public static class UseConfigurations
             .AddJsonFile($"{configurationsDirectory}/logger.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
             .AddJsonFile($"{configurationsDirectory}/database.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"{configurationsDirectory}/database.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"{configurationsDirectory}/mail.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"{configurationsDirectory}/mail.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"{configurationsDirectory}/outbox.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"{configurationsDirectory}/outbox.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"{configurationsDirectory}/hangfire.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"{configurationsDirectory}/hangfire.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
         return builder;
     }

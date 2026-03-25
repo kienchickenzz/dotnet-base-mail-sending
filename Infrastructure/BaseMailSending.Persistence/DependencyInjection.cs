@@ -1,13 +1,17 @@
 ﻿namespace BaseMailSending.Persistence;
 
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
-using BaseMailSending.Persistence.Common;
-using BaseMailSending.Persistence.Repositories;
-using BaseMailSending.Persistence.DatabaseContext;
-
+using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+using BaseMailSending.Persistence.Settings;
+using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.BackgroundJob;
+using BaseMailSending.Persistence.Common;
+using BaseMailSending.Persistence.Repositories;
+using BaseMailSending.Persistence.DatabaseContext;
+using BaseMailSending.Persistence.BackgroundJobs.Outbox;
 
 
 public static class DependencyInjection
@@ -41,5 +45,29 @@ public static class DependencyInjection
         services.AddScoped<IProductRepository, ProductRepository>();
 
         return services;
+    }
+
+    private static IServiceCollection _AddOutbox(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<OutboxSettings>(configuration.GetSection("OutboxSettings"));
+        return services;
+    }
+
+    /// <summary>
+    /// Registers recurring job to process outbox messages.
+    /// </summary>
+    public static void AddOutBoxJob(this IServiceProvider serviceProvider, IConfiguration configuration)
+    {
+        using var scope = serviceProvider.CreateScope();
+
+        var job = scope.ServiceProvider.GetRequiredService<IJobService>();
+        var settings = scope.ServiceProvider
+            .GetRequiredService<IOptions<OutboxSettings>>()
+            .Value;
+
+        job.Recurring<ProcessOutboxMessagesJob>(
+            "ProcessOutboxMessages",
+            job => job.Execute(),
+            $"*/{settings.IntervalInMinutes} * * * *");
     }
 }

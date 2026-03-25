@@ -23,7 +23,7 @@ public interface IRepository<TEntity> where TEntity : BaseEntity
     /// <summary>
     /// Lấy entity theo Id, trả về null nếu không tìm thấy.
     /// </summary>
-    Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     // === WRITE ===
 

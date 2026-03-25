@@ -5,7 +5,7 @@ using BaseMailSending.Application.Common;
 
 public sealed class ProductResponse : IAuditResponse
 {
-    public int Id { get; init; }
+    public Guid Id { get; init; }
     public int CreatedBy { get; init; }
     public DateTime CreatedOn { get; init; }
     public int LastModifiedBy { get; init; }

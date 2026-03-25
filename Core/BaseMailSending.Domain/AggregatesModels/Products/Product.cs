@@ -1,6 +1,7 @@
 ﻿namespace BaseMailSending.Domain.AggregatesModels.Products;
 
 using BaseMailSending.Domain.Common;
+using BaseMailSending.Domain.AggregatesModels.Products.Events;
 
 
 public sealed class Product : BaseEntityRoot
@@ -36,6 +37,8 @@ public sealed class Product : BaseEntityRoot
             name,
             description,
             price);
+
+        product.RaiseDomainEvent(new ProductCreatedDomainEvent(name, price));
 
         return product;
     }

@@ -1,0 +1,10 @@
+{
+    "MailSettings": {
+        "DisplayName": "Nguyen Duc Kien",
+        "From": "nguyenduckien2508@gmail.com",
+        "Host": "smtp.gmail.com",
+        "Password": "klrm tmwz yrkt kquw",
+        "Port": 587,
+        "UserName": "kienchickenz"
+    }
+}

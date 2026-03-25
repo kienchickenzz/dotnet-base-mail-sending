@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaseMailSending.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260325091650_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260325094902_AddOutbox")]
+    partial class AddOutbox
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,9 @@ namespace BaseMailSending.Persistence.Migrations
 
             modelBuilder.Entity("BaseMailSending.Domain.AggregatesModels.Products.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
@@ -66,6 +64,34 @@ namespace BaseMailSending.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("BaseMailSending.Persistence.Entities.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OccurredOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OutboxMessages");
                 });
 #pragma warning restore 612, 618
         }

@@ -39,7 +39,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// Lấy entity theo Id.
     /// </summary>
     public virtual async Task<TEntity?> GetByIdAsync(
-        int id,
+        Guid id,
         CancellationToken cancellationToken = default)
     {
         return await DbSet.FindAsync(new object[] { id }, cancellationToken);

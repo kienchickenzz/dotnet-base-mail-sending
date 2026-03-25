@@ -20,6 +20,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Core\BaseMailSending.Application\BaseMailSending.Application.csproj" />
+        <ProjectReference Include="..\..\Infrastructure\BaseMailSending.Infrastructure\BaseMailSending.Infrastructure.csproj" />
         <ProjectReference Include="..\..\Infrastructure\BaseMailSending.Persistence\BaseMailSending.Persistence.csproj" />
     </ItemGroup>
 

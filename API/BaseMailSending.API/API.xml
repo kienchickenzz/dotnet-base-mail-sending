@@ -11,7 +11,7 @@
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BaseMailSending.Api.Controllers.Features.V1.Products.ProductController.GetProductById(System.Int32)">
+        <member name="M:BaseMailSending.Api.Controllers.Features.V1.Products.ProductController.GetProductById(System.Guid)">
             <summary>
             Get product by id
             </summary>
@@ -32,13 +32,18 @@
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BaseMailSending.Api.Controllers.Features.V1.Products.ProductController.DeleteProduct(System.Int32)">
+        <member name="M:BaseMailSending.Api.Controllers.Features.V1.Products.ProductController.DeleteProduct(System.Guid)">
             <summary>
             Delete product
             </summary>
             <param name="id"></param>
             <returns></returns>
             <exception cref="T:BaseMailSending.Application.Common.Exceptions.BadRequestException"></exception>
+        </member>
+        <member name="M:BaseMailSending.Api.Controllers.Features.V1.Products.ProductController.CreateRandomProduct">
+            <summary>
+            Create a random product for testing outbox pattern
+            </summary>
         </member>
         <member name="T:BaseMailSending.Api.Extensions.SerilogExtensions">
             <summary>

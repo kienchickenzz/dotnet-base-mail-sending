@@ -40,10 +40,10 @@ public class ProductController : BaseApiController
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(Result<ProductResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetProductById(int id)
+    public async Task<IActionResult> GetProductById(Guid id)
     {
         var result = await Sender.Send(new GetProductByIdQuery(id));
 
@@ -93,9 +93,9 @@ public class ProductController : BaseApiController
     /// <param name="id"></param>
     /// <returns></returns>
     /// <exception cref="BadRequestException"></exception>
-    [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> DeleteProduct(int id)
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> DeleteProduct(Guid id)
     {
         var result = await Sender.Send(new DeleteProductCommand(id));
 
@@ -103,5 +103,29 @@ public class ProductController : BaseApiController
             throw new BadRequestException(new List<Error> { result.Error });
 
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Create a random product for testing outbox pattern
+    /// </summary>
+    [HttpPost("random")]
+    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> CreateRandomProduct()
+    {
+        var random = new Random();
+        var productNames = new[] { "Laptop", "Phone", "Tablet", "Monitor", "Keyboard", "Mouse", "Headphones", "Camera" };
+        var adjectives = new[] { "Pro", "Ultra", "Max", "Mini", "Lite", "Plus", "Elite", "Basic" };
+
+        var name = $"{productNames[random.Next(productNames.Length)]} {adjectives[random.Next(adjectives.Length)]} {random.Next(1000, 9999)}";
+        var description = $"Random product created at {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}";
+        var price = Math.Round((decimal)(random.NextDouble() * 1000 + 10), 2);
+
+        var command = new CreateProductCommand(name, description, price);
+        var result = await Sender.Send(command);
+
+        if (result.IsFailure)
+            throw new BadRequestException(new List<Error> { result.Error });
+
+        return CreatedAtAction(nameof(GetProductById), new { Id = result.Value }, result.Value);
     }
 }
