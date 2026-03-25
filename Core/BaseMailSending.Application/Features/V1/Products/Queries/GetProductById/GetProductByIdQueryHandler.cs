@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using BaseMailSending.Application.Common.ApplicationServices.Persistence;
 using BaseMailSending.Application.Common.Messaging;
 using BaseMailSending.Application.Features.V1.Products.Extensions;
-using BaseMailSending.Application.Features.V1.Products.Models.Responses;
+using BaseMailSending.Application.Features.V1.Products.Models;
 using BaseMailSending.Domain.AggregatesModels.Products;
 using BaseMailSending.Domain.Common;
 

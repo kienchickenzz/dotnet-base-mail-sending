@@ -13,8 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using BaseMailSending.Application.Common.ApplicationServices.BackgroundJob;
-using BaseMailSending.Infrastructure.BackgroundJobs;
+using BaseMailSending.Application.Common.ApplicationServices.Email;
 using BaseMailSending.Infrastructure.Settings;
+using BaseMailSending.Infrastructure.BackgroundJobs;
+using BaseMailSending.Infrastructure.Email;
 
 
 public static class DependencyInjection
@@ -24,6 +26,7 @@ public static class DependencyInjection
         services
             ._AddSettings(config)
             ._AddBackgroundJobs(config)
+            ._AddMail(config)
             ._AddServices();
 
         return services;
@@ -43,6 +46,7 @@ public static class DependencyInjection
     private static IServiceCollection _AddSettings(this IServiceCollection services, IConfiguration config)
     {
         services.Configure<HangfireSettings>(config.GetSection(HangfireSettings.SectionName));
+        services.Configure<MailSettings>(config.GetSection(MailSettings.SectionName));
 
         return services;
     }
@@ -90,5 +94,12 @@ public static class DependencyInjection
         };
 
         return app.UseHangfireDashboard(settings.Route, dashboardOptions);
+    }
+
+    private static IServiceCollection _AddMail(this IServiceCollection services, IConfiguration config)
+    {
+        services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+        services.AddScoped<IMailService, SmtpMailService>();
+        return services;
     }
 }

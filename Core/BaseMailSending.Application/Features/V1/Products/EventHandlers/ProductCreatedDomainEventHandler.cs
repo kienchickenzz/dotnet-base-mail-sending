@@ -2,15 +2,17 @@
  * Handler for ProductCreatedDomainEvent.
  *
  * <p>Processes the event after a product is successfully created.
- * Currently logs the event; can be extended for notifications, integrations, etc.</p>
+ * Sends notification email to configured recipient.</p>
  */
 
 namespace BaseMailSending.Application.Features.V1.Products.EventHandlers;
 
 using Microsoft.Extensions.Logging;
 
+using BaseMailSending.Application.Common.ApplicationServices.Email;
 using BaseMailSending.Application.Common.Messaging;
 using BaseMailSending.Domain.AggregatesModels.Products.Events;
+using BaseMailSending.Application.Features.V1.Products.Models;
 
 
 /// <summary>
@@ -19,23 +21,64 @@ using BaseMailSending.Domain.AggregatesModels.Products.Events;
 public sealed class ProductCreatedDomainEventHandler : IDomainEventHandler<ProductCreatedDomainEvent>
 {
     private readonly ILogger<ProductCreatedDomainEventHandler> _logger;
+    private readonly IMailService _mailService;
+    private readonly IEmailTemplateService _emailTemplateService;
 
-    public ProductCreatedDomainEventHandler(ILogger<ProductCreatedDomainEventHandler> logger)
+    private const string NotificationEmail = "nguyenduckien2508@gmail.com";
+    private const string TemplateName = "product-created";
+
+    public ProductCreatedDomainEventHandler(
+        ILogger<ProductCreatedDomainEventHandler> logger,
+        IMailService mailService,
+        IEmailTemplateService emailTemplateService)
     {
         _logger = logger;
+        _mailService = mailService;
+        _emailTemplateService = emailTemplateService;
     }
 
     /// <summary>
-    /// Logs product creation event for tracking and auditing.
+    /// Sends notification email when a new product is created.
     /// </summary>
-    public Task Handle(ProductCreatedDomainEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(ProductCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation(
-            "[Domain Event] ProductCreated - Name: {ProductName}, Price: {Price:C}, Timestamp: {Timestamp}",
+            "[Domain Event] ProductCreated - Name: {ProductName}, Price: {Price:C}",
             notification.ProductName,
-            notification.Price,
-            DateTime.UtcNow);
+            notification.Price);
 
-        return Task.CompletedTask;
+        try
+        {
+            // 1. Build email model
+            var emailModel = new ProductCreatedEmailModel
+            {
+                ProductName = notification.ProductName,
+                Price = notification.Price.ToString("C"),
+                CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss UTC")
+            };
+
+            // 2. Render template
+            string emailBody = _emailTemplateService.GenerateEmailTemplate(TemplateName, emailModel);
+
+            // 3. Build mail request
+            var mailRequest = new MailRequest(
+                to: new List<string> { NotificationEmail },
+                subject: $"[New Product] {notification.ProductName} has been created!",
+                body: emailBody
+            );
+
+            // 4. Send email
+            await _mailService.SendAsync(mailRequest, cancellationToken);
+
+            _logger.LogInformation(
+                "[Domain Event] ProductCreated - Email sent to {Email}",
+                NotificationEmail);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "[Domain Event] ProductCreated - Failed to send email for product: {ProductName}",
+                notification.ProductName);
+        }
     }
 }

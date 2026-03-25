@@ -9,7 +9,7 @@ using BaseMailSending.Application.Common.Models;
 using BaseMailSending.Application.Features.V1.Products.Commands.CreateProduct;
 using BaseMailSending.Application.Features.V1.Products.Commands.UpdateProduct;
 using BaseMailSending.Application.Features.V1.Products.Commands.DeleteProduct;
-using BaseMailSending.Application.Features.V1.Products.Models.Responses;
+using BaseMailSending.Application.Features.V1.Products.Models;
 using BaseMailSending.Application.Features.V1.Products.Queries.GetProductById;
 using BaseMailSending.Application.Features.V1.Products.Queries.GetProducts;
 using BaseMailSending.Domain.Common;

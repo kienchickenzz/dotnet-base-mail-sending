@@ -11,7 +11,7 @@ using BaseMailSending.Application.Common.Extensions;
 using BaseMailSending.Application.Common.Messaging;
 using BaseMailSending.Application.Common.Models;
 using BaseMailSending.Application.Features.V1.Products.Extensions;
-using BaseMailSending.Application.Features.V1.Products.Models.Responses;
+using BaseMailSending.Application.Features.V1.Products.Models;
 using BaseMailSending.Domain.Common;
 
 

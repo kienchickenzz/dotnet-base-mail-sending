@@ -24,4 +24,10 @@
         <ProjectReference Include="..\..\Infrastructure\BaseMailSending.Persistence\BaseMailSending.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Update="EmailTemplates\**\*.cshtml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 </Project>

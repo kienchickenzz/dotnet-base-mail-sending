@@ -1,4 +1,4 @@
-﻿namespace BaseMailSending.Application.Features.V1.Products.Models.Responses;
+﻿namespace BaseMailSending.Application.Features.V1.Products.Models;
 
 using BaseMailSending.Application.Common;
 
