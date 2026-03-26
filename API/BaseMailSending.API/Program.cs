@@ -2,7 +2,6 @@ using BaseMailSending.Application;
 using BaseMailSending.Persistence;
 using BaseMailSending.Infrastructure;
 using BaseMailSending.Persistence.Initialization;
-using BaseMailSending.Api.Configurations;
 using BaseMailSending.Api.Extensions;
 using BaseMailSending.Api.OpenApi;
 
@@ -17,7 +16,6 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.AddConfigurations();
 builder.Host.UseSerilogFromSettings();
 
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();

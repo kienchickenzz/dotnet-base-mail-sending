@@ -1,4 +1,11 @@
-namespace BaseMailSending.Infrastructure.Email;
+/**
+ * SMTP implementation of IMailService.
+ *
+ * <p>Sends emails using MailKit SMTP client.
+ * Supports Gmail with App Password authentication.</p>
+ */
+
+namespace BaseMailSending.Infrastructure.Email.Mailkit;
 
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -9,7 +16,9 @@ using MimeKit;
 using BaseMailSending.Application.Common.ApplicationServices.Email;
 using BaseMailSending.Infrastructure.Settings;
 
-
+/// <summary>
+/// SMTP-based email sending service.
+/// </summary>
 public class SmtpMailService : IMailService
 {
     private readonly MailSettings _settings;
@@ -21,7 +30,8 @@ public class SmtpMailService : IMailService
         _logger = logger;
     }
 
-    public async Task SendAsync(MailRequest request, CancellationToken cancellationToken = default)
+    /// <inheritdoc />
+    public async Task SendAsync(IMailRequest request, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -30,34 +40,24 @@ public class SmtpMailService : IMailService
             // From
             email.From.Add(new MailboxAddress(_settings.DisplayName, request.From ?? _settings.From));
 
-            // To
-            foreach (string address in request.To)
-                email.To.Add(MailboxAddress.Parse(address));
+            // To (single recipient)
+            email.To.Add(MailboxAddress.Parse(request.To));
 
             // Reply To
             if (!string.IsNullOrEmpty(request.ReplyTo))
                 email.ReplyTo.Add(new MailboxAddress(request.ReplyToName, request.ReplyTo));
 
             // Bcc
-            if (request.Bcc != null)
-            {
-                foreach (string address in request.Bcc.Where(bccValue => !string.IsNullOrWhiteSpace(bccValue)))
-                    email.Bcc.Add(MailboxAddress.Parse(address.Trim()));
-            }
+            if (!string.IsNullOrWhiteSpace(request.Bcc))
+                email.Bcc.Add(MailboxAddress.Parse(request.Bcc.Trim()));
 
             // Cc
-            if (request.Cc != null)
-            {
-                foreach (string? address in request.Cc.Where(ccValue => !string.IsNullOrWhiteSpace(ccValue)))
-                    email.Cc.Add(MailboxAddress.Parse(address.Trim()));
-            }
+            if (!string.IsNullOrWhiteSpace(request.Cc))
+                email.Cc.Add(MailboxAddress.Parse(request.Cc.Trim()));
 
             // Headers
-            if (request.Headers != null)
-            {
-                foreach (var header in request.Headers)
-                    email.Headers.Add(header.Key, header.Value);
-            }
+            foreach (var header in request.Headers)
+                email.Headers.Add(header.Key, header.Value);
 
             // Content
             var builder = new BodyBuilder();
@@ -65,12 +65,9 @@ public class SmtpMailService : IMailService
             email.Subject = request.Subject;
             builder.HtmlBody = request.Body;
 
-            // Create the file attachments for this e-mail message
-            if (request.AttachmentData != null)
-            {
-                foreach (var attachmentInfo in request.AttachmentData)
-                    builder.Attachments.Add(attachmentInfo.Key, attachmentInfo.Value);
-            }
+            // Attachments
+            foreach (var attachment in request.Attachments)
+                builder.Attachments.Add(attachment.FileName, attachment.Content);
 
             email.Body = builder.ToMessageBody();
 

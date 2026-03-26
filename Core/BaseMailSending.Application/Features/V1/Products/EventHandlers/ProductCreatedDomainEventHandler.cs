@@ -22,7 +22,8 @@ public sealed class ProductCreatedDomainEventHandler : IDomainEventHandler<Produ
 {
     private readonly ILogger<ProductCreatedDomainEventHandler> _logger;
     private readonly IMailService _mailService;
-    private readonly IEmailTemplateService _emailTemplateService;
+    private readonly IMailRequestFactory _mailRequestFactory;
+    private readonly IEmailTemplateFactory _emailTemplateFactory;
 
     private const string NotificationEmail = "nguyenduckien2508@gmail.com";
     private const string TemplateName = "product-created";
@@ -30,11 +31,13 @@ public sealed class ProductCreatedDomainEventHandler : IDomainEventHandler<Produ
     public ProductCreatedDomainEventHandler(
         ILogger<ProductCreatedDomainEventHandler> logger,
         IMailService mailService,
-        IEmailTemplateService emailTemplateService)
+        IMailRequestFactory mailRequestFactory,
+        IEmailTemplateFactory emailTemplateFactory)
     {
         _logger = logger;
         _mailService = mailService;
-        _emailTemplateService = emailTemplateService;
+        _mailRequestFactory = mailRequestFactory;
+        _emailTemplateFactory = emailTemplateFactory;
     }
 
     /// <summary>
@@ -58,11 +61,11 @@ public sealed class ProductCreatedDomainEventHandler : IDomainEventHandler<Produ
             };
 
             // 2. Render template
-            string emailBody = _emailTemplateService.GenerateEmailTemplate(TemplateName, emailModel);
+            string emailBody = _emailTemplateFactory.GenerateEmailTemplate(TemplateName, emailModel);
 
-            // 3. Build mail request
-            var mailRequest = new MailRequest(
-                to: new List<string> { NotificationEmail },
+            // 3. Build mail request using factory
+            var mailRequest = _mailRequestFactory.Create(
+                to: NotificationEmail,
                 subject: $"[New Product] {notification.ProductName} has been created!",
                 body: emailBody
             );

@@ -1,16 +1,26 @@
-namespace BaseMailSending.Infrastructure.Email;
+/**
+ * Razor-based email template factory.
+ *
+ * <p>Generates HTML email content from Razor templates.</p>
+ */
+
+namespace BaseMailSending.Infrastructure.Email.Template;
+
+using System.Text;
 
 using RazorEngineCore;
-using System.Text;
 
 using BaseMailSending.Application.Common.ApplicationServices.Email;
 
-
-public class EmailTemplateService : IEmailTemplateService
+/// <summary>
+/// Generates email content using Razor templates.
+/// </summary>
+public class RazorEmailTemplateFactory : IEmailTemplateFactory
 {
+    /// <inheritdoc />
     public string GenerateEmailTemplate<T>(string templateName, T mailTemplateModel)
     {
-        string template = GetTemplate(templateName);
+        string template = _GetTemplate(templateName);
 
         IRazorEngine razorEngine = new RazorEngine();
         IRazorEngineCompiledTemplate modifiedTemplate = razorEngine.Compile(template);
@@ -18,7 +28,10 @@ public class EmailTemplateService : IEmailTemplateService
         return modifiedTemplate.Run(mailTemplateModel);
     }
 
-    public static string GetTemplate(string templateName)
+    /// <summary>
+    /// Reads template content from file.
+    /// </summary>
+    private static string _GetTemplate(string templateName)
     {
         string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         string tmplFolder = Path.Combine(baseDirectory, "EmailTemplates");

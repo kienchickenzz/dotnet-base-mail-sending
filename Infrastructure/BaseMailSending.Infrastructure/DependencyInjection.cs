@@ -17,6 +17,9 @@ using BaseMailSending.Application.Common.ApplicationServices.Email;
 using BaseMailSending.Infrastructure.Settings;
 using BaseMailSending.Infrastructure.BackgroundJobs;
 using BaseMailSending.Infrastructure.Email;
+using BaseMailSending.Infrastructure.Email.Fake;
+using BaseMailSending.Infrastructure.Email.Mailkit;
+using BaseMailSending.Infrastructure.Email.Template;
 
 
 public static class DependencyInjection
@@ -98,8 +101,25 @@ public static class DependencyInjection
 
     private static IServiceCollection _AddMail(this IServiceCollection services, IConfiguration config)
     {
-        services.AddScoped<IEmailTemplateService, EmailTemplateService>();
-        services.AddScoped<IMailService, SmtpMailService>();
+        var settings = config
+            .GetSection(MailSettings.SectionName)
+            .Get<MailSettings>();
+
+        services.AddSingleton<IMailRequestFactory, MailRequestFactory>();
+        services.AddScoped<IEmailTemplateFactory, RazorEmailTemplateFactory>();
+
+        // Register only the configured provider
+        switch (settings?.Provider)
+        {
+            case EmailProviderEnum.Fake:
+                services.AddScoped<IMailService, FakeMailService>();
+                break;
+            case EmailProviderEnum.Smtp:
+            default:
+                services.AddScoped<IMailService, SmtpMailService>();
+                break;
+        }
+
         return services;
     }
 }

@@ -1,7 +1,19 @@
+/**
+ * Contract for email sending service.
+ *
+ * <p>Defines the abstraction for sending emails.
+ * Infrastructure layer provides concrete SMTP implementation.</p>
+ */
+
 namespace BaseMailSending.Application.Common.ApplicationServices.Email;
 
-
+/// <summary>
+/// Email sending service contract.
+/// </summary>
 public interface IMailService
 {
-    Task SendAsync(MailRequest request, CancellationToken ct);
+    /// <summary>
+    /// Sends a single email asynchronously.
+    /// </summary>
+    Task SendAsync(IMailRequest request, CancellationToken cancellationToken = default);
 }
