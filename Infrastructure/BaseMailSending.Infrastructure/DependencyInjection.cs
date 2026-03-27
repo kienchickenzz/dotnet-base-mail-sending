@@ -114,7 +114,7 @@ public static class DependencyInjection
             case EmailProviderEnum.Fake:
                 services.AddScoped<IMailService, FakeMailService>();
                 break;
-            case EmailProviderEnum.Smtp:
+            case EmailProviderEnum.MailKit:
             default:
                 services.AddScoped<IMailService, SmtpMailService>();
                 break;

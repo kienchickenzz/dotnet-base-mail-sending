@@ -21,12 +21,13 @@ using BaseMailSending.Infrastructure.Settings;
 /// </summary>
 public class SmtpMailService : IMailService
 {
-    private readonly MailSettings _settings;
+    private readonly MailKitSettings _settings;
     private readonly ILogger<SmtpMailService> _logger;
 
     public SmtpMailService(IOptions<MailSettings> settings, ILogger<SmtpMailService> logger)
     {
-        _settings = settings.Value;
+        _settings = settings.Value.Mailkit
+            ?? throw new InvalidOperationException("Mailkit settings not configured");
         _logger = logger;
     }
 

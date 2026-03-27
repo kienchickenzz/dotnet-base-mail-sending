@@ -1,7 +1,8 @@
 /**
  * Mail configuration settings.
  *
- * <p>Contains SMTP configuration and provider selection.</p>
+ * <p>Contains provider selection and provider-specific configurations.
+ * Designed for extensibility with multiple email providers.</p>
  */
 
 namespace BaseMailSending.Infrastructure.Settings;
@@ -17,23 +18,34 @@ public enum EmailProviderEnum
     Fake,
 
     /// <summary>
-    /// SMTP provider using MailKit (production).
+    /// MailKit SMTP provider (production).
     /// </summary>
-    Smtp
+    MailKit
 }
 
 /// <summary>
-/// Mail service configuration.
+/// Root mail configuration.
 /// </summary>
 public class MailSettings
 {
     public const string SectionName = "MailSettings";
 
     /// <summary>
-    /// Email provider to use.
+    /// Active email provider.
     /// </summary>
-    public EmailProviderEnum Provider { get; set; } = EmailProviderEnum.Smtp;
+    public EmailProviderEnum Provider { get; set; } = EmailProviderEnum.MailKit;
 
+    /// <summary>
+    /// MailKit SMTP configuration.
+    /// </summary>
+    public MailKitSettings? Mailkit { get; set; }
+}
+
+/// <summary>
+/// MailKit SMTP provider configuration.
+/// </summary>
+public class MailKitSettings
+{
     public string? From { get; set; }
 
     public string? Host { get; set; }
