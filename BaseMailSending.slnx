@@ -1,6 +1,6 @@
 <Solution>
-    <Folder Name="/API/">
-        <Project Path="API/BaseMailSending.API/BaseMailSending.API.csproj" />
+    <Folder Name="/Presentation/">
+        <Project Path="Presentation/BaseMailSending.API/BaseMailSending.API.csproj" />
     </Folder>
     <Folder Name="/Core/">
         <Project Path="Core/BaseMailSending.Application/BaseMailSending.Application.csproj" />
