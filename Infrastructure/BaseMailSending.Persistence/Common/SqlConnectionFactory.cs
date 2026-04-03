@@ -3,7 +3,7 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.DataAccess;
 
 
 internal sealed class SqlConnectionFactory : ISqlConnectionFactory

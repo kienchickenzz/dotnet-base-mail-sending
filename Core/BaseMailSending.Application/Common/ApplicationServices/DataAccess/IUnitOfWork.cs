@@ -1,5 +1,4 @@
-﻿namespace BaseMailSending.Application.Common.ApplicationServices.Persistence;
-
+namespace BaseMailSending.Application.Common.ApplicationServices.DataAccess;
 
 public interface IUnitOfWork : IAsyncDisposable
 {

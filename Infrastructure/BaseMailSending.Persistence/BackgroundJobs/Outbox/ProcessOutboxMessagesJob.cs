@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Data;
 
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.DataAccess;
 using BaseMailSending.Domain.Common;
 using BaseMailSending.Persistence.Settings;
 

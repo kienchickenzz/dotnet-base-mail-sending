@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using BaseMailSending.Persistence.Settings;
+using BaseMailSending.Application.Common.ApplicationServices.DataAccess;
 using BaseMailSending.Application.Common.ApplicationServices.Persistence;
 using BaseMailSending.Application.Common.ApplicationServices.BackgroundJob;
 using BaseMailSending.Persistence.Common;

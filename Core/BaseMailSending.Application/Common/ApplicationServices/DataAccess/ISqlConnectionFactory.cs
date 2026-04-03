@@ -1,4 +1,4 @@
-﻿namespace BaseMailSending.Application.Common.ApplicationServices.Persistence;
+namespace BaseMailSending.Application.Common.ApplicationServices.DataAccess;
 
 using System.Data;
 

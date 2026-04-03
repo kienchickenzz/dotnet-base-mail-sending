@@ -3,7 +3,7 @@
 using MediatR;
 using System.Transactions;
 
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.DataAccess;
 
 
 public sealed class TransactionPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>

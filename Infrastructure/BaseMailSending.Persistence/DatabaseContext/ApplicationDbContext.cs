@@ -1,6 +1,6 @@
 ﻿namespace BaseMailSending.Persistence.DatabaseContext;
 
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.DataAccess;
 using BaseMailSending.Application.Common.Exceptions;
 using BaseMailSending.Domain.AggregatesModels.Products;
 using BaseMailSending.Domain.Common;
