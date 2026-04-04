@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 
 using Microsoft.EntityFrameworkCore;
 
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.Repositories;
 using BaseMailSending.Domain.Common;
 using BaseMailSending.Persistence.DatabaseContext;
 

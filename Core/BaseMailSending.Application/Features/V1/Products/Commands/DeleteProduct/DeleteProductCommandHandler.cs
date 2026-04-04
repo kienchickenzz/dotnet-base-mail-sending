@@ -1,7 +1,7 @@
 ﻿namespace BaseMailSending.Application.Features.V1.Products.Commands.DeleteProduct;
 
 using BaseMailSending.Application.Common.Messaging;
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.Repositories;
 using BaseMailSending.Domain.AggregatesModels.Products;
 using BaseMailSending.Domain.Common;
 

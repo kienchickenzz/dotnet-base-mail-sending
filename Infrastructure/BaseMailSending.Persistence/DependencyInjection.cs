@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using BaseMailSending.Persistence.Settings;
 using BaseMailSending.Application.Common.ApplicationServices.DataAccess;
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.Repository;
 using BaseMailSending.Application.Common.ApplicationServices.BackgroundJob;
 using BaseMailSending.Persistence.Common;
 using BaseMailSending.Persistence.Repositories;
@@ -20,9 +20,23 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructurePersistence(this IServiceCollection services,
         IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("DefaultConnection") ??
-                                  throw new ArgumentNullException(nameof(configuration));
+        services
+            ._AddDatabase(configuration)
+            ._AddRepositories()
+            ._AddSettings(configuration);
 
+        return services;
+    }
+
+    /// <summary>
+    /// Configures EF Core DbContext, UnitOfWork pattern, and SQL connection factory.
+    /// </summary>
+    private static IServiceCollection _AddDatabase(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new ArgumentNullException(nameof(configuration));
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
@@ -34,30 +48,38 @@ public static class DependencyInjection
         services.AddSingleton<ISqlConnectionFactory>(_ =>
             new SqlConnectionFactory(connectionString));
 
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
-        services.AddRepositories();
-
         return services;
     }
 
-    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    /// <summary>
+    /// Registers generic and specific repository implementations.
+    /// </summary>
+    private static IServiceCollection _AddRepositories(this IServiceCollection services)
     {
+        // WARNING: Avoid injecting IRepository<T> directly. Prefer creating specific
+        // interfaces (e.g., IProductRepository) for better abstraction and testability.
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        // Specific repositories - PREFERRED approach
         services.AddScoped<IProductRepository, ProductRepository>();
 
         return services;
     }
 
-    private static IServiceCollection _AddOutbox(this IServiceCollection services, IConfiguration configuration)
+    /// <summary>
+    /// Registers configuration settings with IOptions pattern.
+    /// </summary>
+    private static IServiceCollection _AddSettings(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<OutboxSettings>(configuration.GetSection("OutboxSettings"));
+        services.Configure<OutboxSettings>(configuration.GetSection(OutboxSettings.SectionName));
+
         return services;
     }
 
     /// <summary>
     /// Registers recurring job to process outbox messages.
     /// </summary>
-    public static void AddOutBoxJob(this IServiceProvider serviceProvider, IConfiguration configuration)
+    public static void AddOutBoxJob(this IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
 

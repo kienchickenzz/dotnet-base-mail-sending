@@ -12,6 +12,7 @@ namespace BaseMailSending.Persistence.Settings;
 /// </summary>
 public sealed class OutboxSettings
 {
+    public const string SectionName = "OutboxSettings";
     /// <summary>
     /// Interval in minutes between outbox processing runs (used for cron scheduling).
     /// </summary>

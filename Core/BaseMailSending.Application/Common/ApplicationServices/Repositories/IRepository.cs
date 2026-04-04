@@ -4,7 +4,7 @@
  * <p>Exposes IQueryable for flexible LINQ queries in handlers.
  * Infrastructure layer implements this with EF Core DbContext.</p>
  */
-namespace BaseMailSending.Application.Common.ApplicationServices.Persistence;
+namespace BaseMailSending.Application.Common.ApplicationServices.Repositories;
 
 using System.Linq.Expressions;
 

@@ -48,7 +48,7 @@ app.UseInfrastructure(builder.Configuration);
 
 app.UseCustomExceptionHandler();
 
-app.Services.AddOutBoxJob(builder.Configuration);
+app.Services.AddOutBoxJob();
 
 app.Lifetime.ApplicationStarted.Register(() =>
 {

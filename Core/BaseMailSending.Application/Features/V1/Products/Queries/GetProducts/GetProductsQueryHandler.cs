@@ -6,7 +6,7 @@
  */
 namespace BaseMailSending.Application.Features.V1.Products.Queries.GetProducts;
 
-using BaseMailSending.Application.Common.ApplicationServices.Persistence;
+using BaseMailSending.Application.Common.ApplicationServices.Repositories;
 using BaseMailSending.Application.Common.Extensions;
 using BaseMailSending.Application.Common.Messaging;
 using BaseMailSending.Application.Common.Models;
