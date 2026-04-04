@@ -6,7 +6,7 @@
  */
 namespace BaseMailSending.Persistence.Repositories;
 
-using BaseMailSending.Application.Common.ApplicationServices.Repository;
+using BaseMailSending.Application.Common.ApplicationServices.Repositories;
 using BaseMailSending.Domain.AggregatesModels.Products;
 using BaseMailSending.Persistence.Common;
 using BaseMailSending.Persistence.DatabaseContext;
